@@ -1,6 +1,6 @@
 package com.ssafy.ws.model.repo;
 
-import com.ssafy.ws.model.User;
+import com.ssafy.ws.dto.User;
 
 public interface UserRepo {
 

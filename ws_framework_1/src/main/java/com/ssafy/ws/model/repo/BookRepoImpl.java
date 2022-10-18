@@ -2,48 +2,40 @@ package com.ssafy.ws.model.repo;
 
 import java.util.List;
 
-import javax.sql.DataSource;
+import com.ssafy.ws.dto.Book;
 
-import org.springframework.stereotype.Repository;
-
-import com.ssafy.ws.model.Book;
-
-@Repository
 public class BookRepoImpl implements BookRepo {
-
-	private DataSource dataSource;
-
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+	
+	public BookRepoImpl() {
 	}
 
 	@Override
 	public int insert(Book book) {
-		System.out.println("책 등록!!!");
+		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int update(Book book) {
-		System.out.println("책 수정!!!");
+		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int delete(String isbn) {
-		System.out.println("책 삭제!!!");
+		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public Book select(String isbn) {
-		System.out.println("책 선택!!!");
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<Book> search() {
-		System.out.println("책 목록!!!");
+		// TODO Auto-generated method stub
 		return null;
 	}
 

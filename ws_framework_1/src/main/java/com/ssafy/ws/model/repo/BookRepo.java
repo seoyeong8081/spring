@@ -2,7 +2,7 @@ package com.ssafy.ws.model.repo;
 
 import java.util.List;
 
-import com.ssafy.ws.model.Book;
+import com.ssafy.ws.dto.Book;
 
 public interface BookRepo {
 
