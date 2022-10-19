@@ -3,19 +3,10 @@ package com.ssafy.hello.di3;
 public class HelloMain {
 
 	public static void main(String[] args) {
+		// main 안에서 객체를 만드는 것이 문제
+		// 여기서 안 만들면 됨
 		HelloMessage helloMessage = HelloMessageFactory.getHelloMessage("kor");
-//		HelloMessage helloMessage = HelloMessageFactory.getHelloMessage("eng");
-		
-		String greeting = helloMessage.hello("안효인");
-//		String greeting = helloMessage.hello("Mr. An");
-		
-		System.out.println(greeting);
-		
-		System.out.println("----------------------------------------");
-		
-		HelloMessage kor1 = HelloMessageFactory.getHelloMessage("kor");
-		HelloMessage kor2 = HelloMessageFactory.getHelloMessage("kor");
-		System.out.println(kor1 + " ::::: " + kor2);
+		System.out.println(helloMessage.hello("조서영"));
 	}
 	
 }
