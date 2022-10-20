@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+#ssafy_logo{
+	width: 150px;
+}
+
+#user-info {
+	text-align: right;
+	padding-right: 50px;
+}
+
+a {
+	text-decoration: none;
+}
