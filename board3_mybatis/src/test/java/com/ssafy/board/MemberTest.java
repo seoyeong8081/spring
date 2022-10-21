@@ -1,6 +1,7 @@
 package com.ssafy.board;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -33,6 +33,8 @@ public class BoardServiceImpl implements BoardService {
 		String key = map.get("key");
 		if("userid".equals(key))
 			key = "b.user_id";
+//		if("subject".equals(key))
+//			key = "b.subject"; // subject는 하나의 테이블에만 존재해서 괜찮음
 		param.put("key", key == null ? "" : key);
 		param.put("word", map.get("word") == null ? "" : map.get("word"));
 		int pgNo = Integer.parseInt(map.get("pgno") == null ? "1" : map.get("pgno"));
@@ -53,7 +55,14 @@ public class BoardServiceImpl implements BoardService {
 
 		pageNavigation.setCurrentPage(currentPage);
 		pageNavigation.setNaviSize(naviSize);
-		int totalCount = boardDao.getTotalArticleCount(map);
+		Map<String, Object> param = new HashMap<String, Object>();
+		String key = map.get("key");
+		if("userid".equals(key)) {
+			key = "user_id";
+		}
+		param.put("key", key == null ? "" : key);
+		param.put("word", map.get("word") == null ? "" : map.get("word"));
+		int totalCount = boardDao.getTotalArticleCount(param);
 		pageNavigation.setTotalCount(totalCount);
 		int totalPageCount = (totalCount - 1) / sizePerPage + 1;
 		pageNavigation.setTotalPageCount(totalPageCount);
