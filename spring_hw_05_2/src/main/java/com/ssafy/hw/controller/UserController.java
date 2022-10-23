@@ -69,7 +69,7 @@ public class UserController {
 		 	// User 객체에 원본 파일 이름 저장
 		 	user.setOrgImg(file.getOriginalFilename());
 		 	// 파일 저장
-		 	file.transferTo(new File(___________));
+		 	file.transferTo(new File(res.getURI()));
 			
 		}
 

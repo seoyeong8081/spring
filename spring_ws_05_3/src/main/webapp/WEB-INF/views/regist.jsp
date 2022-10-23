@@ -10,7 +10,7 @@
 	<%@ include file="/WEB-INF/views/include/header.jsp" %>
 	<div class="container">
 		<h1>도서 등록</h1>
-		<form method="post" action="regist">
+		<form method="post" action="regist" enctype="multipart/form-data">
 			<div class="form-group row mb-3">
 				<label class="col-1" for="isbn">도서번호</label>
 				<div class="col-3">

@@ -2,11 +2,8 @@ package com.ssafy.ws.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
@@ -133,30 +130,18 @@ public class BookController {
 	public String doRegist(@ModelAttribute Book book, @RequestPart(required = false) MultipartFile file, Model model)
 			throws IllegalStateException, IOException {
 				//코드작성
-		
-		model.addAttribute("book", book);
-		
-		Resource resource = resLoader.getResource("/resources"); // /upload
-//		logger.debug("저장 폴더 존재: {}", resource.exists());
-//		logger.debug("저장 폴더 URL: {}", resource.getURI());
-//		logger.debug("저장 폴더 URL: {}", resource.getURI().getPath());
-		logger.debug("저장 폴더 URL: {}", resource.getURI());
-		String folderLoc = resource.getURI().getPath() + "upload";
-		logger.debug(folderLoc);
-		File folder = new File(folderLoc);
-		if (!folder.exists())
-			folder.mkdirs();
-		
-		String originalFileName = file.getOriginalFilename();
-		logger.debug(originalFileName);
-		if (!originalFileName.isEmpty()) {
-			String saveFileName = UUID.randomUUID().toString()
-					+ originalFileName.substring(originalFileName.lastIndexOf('.'));
-			book.setOrgImg(originalFileName);
-			book.setImg(saveFileName);
-			logger.debug("원본 파일 이름 : {}, 실제 저장 파일 이름 : {}", file.getOriginalFilename(), saveFileName);
-			file.transferTo(new File(folder, saveFileName));
+		if (!file.isEmpty()) {
+			Resource resource = resLoader.getResource("resources/upload"); // /webapp/resources/upload
+			book.setImg(System.currentTimeMillis() + "_" + file.getOriginalFilename());
+			book.setOrgImg(file.getOriginalFilename());
+			
+			if (!resource.exists()) {
+				resource.getFile().mkdirs();
+			}
+			file.transferTo(new File(resource.getFile().getCanonicalPath() + "/" + book.getImg()));
+			
 		}
+		model.addAttribute("book", book);
 		
 		return "regist_result";
 	}

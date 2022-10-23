@@ -24,7 +24,9 @@
 				<tr>
 					<td>도서번호</td>
 					<td>${book.isbn}</td>
-					<td rowspan="5"></td>
+					<td rowspan="5" id="table-img">
+						<img alt="" src="${root}/resources/upload/${book.img}" width="100%">
+					</td>
 				</tr>
 				<tr>
 					<td>도서명</td>
