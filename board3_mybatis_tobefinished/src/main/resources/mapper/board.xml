@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.board.model.dao.BoardDao">
+
+	<resultMap type="fileInfoDto" id="fileInfo">
+		<result column="save_folder" property="saveFolder"/>
+		<result column="original_file" property="originalFile"/>
+		<result column="save_file" property="saveFile"/>
+	</resultMap>
+
+	<resultMap type="boardDto" id="article">
+		<result column="article_no" property="articleNo"/>
+		<result column="user_id" property="userId"/>
+		<result column="user_name" property="userName"/>
+		<result column="subject" property="subject"/>
+		<result column="content" property="content"/>
+		<result column="hit" property="hit"/>
+		<result column="register_time" property="registerTime"/>
+	</resultMap>
+	
+	<resultMap type="boardDto" id="viewArticle" extends="article">
+		<collection property="fileInfos" javaType="ArrayList" column="file_infos" ofType="com.ssafy.board.model.FileInfoDto">
+			
+		</collection>
+	</resultMap>
+
+	<!-- <sql id="mapCondition">
+		<if test="key == 'b.user_id' || key == 'user_id'">and ${key} = #{word}</if>
+		<if test="key == 'subject' || key=='b.subject'">and ${key} like concat('%', #{word}, '%')</if>
+	</sql>
+	
+	<select id="listArticle" parameterType="map" resultMap="board">
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name
+		from board b, members m
+		<where>
+			b.user_id = m.user_id
+			<include refid="mapCondition"></include>
+		</where>
+		order by b.article_no desc
+		limit #{start}, #{listsize}
+	</select>
+	
+	<select id="getTotalArticleCount" parameterType="map" resultType="int">
+		select count(article_no)
+		from board
+		<where>
+			<include refid="mapCondition"></include>
+		</where>
+	</select> -->
+	
+	<sql id="search">
+		<if test="word != null and word != ''">
+			<if test="key == 'subject'">
+				and subject like concat('%', #{word}, '%')
+			</if>
+			<if test="key != 'subject'">
+				and ${key} = #{word}
+			</if>
+		</if>
+	</sql>
+	
+	<select id="listArticle" parameterType="map" resultMap="article">
+		select b.article_no, b.user_id, b.subject, b.content, b.hit, b.register_time, m.user_name
+		from board b, members m
+		where b.user_id = m.user_id
+		<include refid="search" />
+		order by b.article_no desc
+		limit #{start}, #{listsize}
+	</select>
+	
+	<select id="getTotalArticleCount" parameterType="map" resultType="int">
+		select count(article_no)
+		from board
+		<where>
+			<include refid="search" />
+		</where>
+	</select>
+	
+	<select id="getArticle" parameterType="int" resultMap="board">
+	
+	</select>
+
+</mapper>

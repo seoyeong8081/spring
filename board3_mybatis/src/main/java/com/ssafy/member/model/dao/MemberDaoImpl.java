@@ -14,7 +14,7 @@ import com.ssafy.util.SqlMapConfig;
 public class MemberDaoImpl implements MemberDao {
 
 	private final String NAMESPACE = "com.ssafy.member.model.dao.MemberDao.";
-	
+
 	@Override
 	public int idCheck(String userId) throws SQLException {
 		try (SqlSession sqlSession = SqlMapConfig.getSqlSession()) {
