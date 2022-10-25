@@ -1,5 +1,6 @@
 package com.ssafy.board.model.service;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.board.model.BoardDto;
+import com.ssafy.board.model.FileInfoDto;
 import com.ssafy.board.model.mapper.BoardMapper;
 import com.ssafy.util.PageNavigation;
 import com.ssafy.util.SizeConstant;
@@ -27,7 +29,10 @@ public class BoardServiceImpl implements BoardService {
 	@Transactional
 	public int writeArticle(BoardDto boardDto) throws Exception {
 		boardMapper.writeArticle(boardDto);
-		boardMapper.registerFile(boardDto); // boardDto 안에 파일 있을 때만 실행되도록 수정
+		List<FileInfoDto> list = boardDto.getFileInfos();
+		if (list != null && !list.isEmpty()) { // boardDto 안에 파일 있을 때만 실행되도록 수정
+			boardMapper.registerFile(boardDto); 
+		}
 		return 1;
 	}
 
@@ -93,9 +98,16 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	@Transactional
-	public void deleteArticle(int articleNo) throws Exception {
-		// 파일 지우고 넣기
+	public void deleteArticle(int articleNo, String path) throws Exception {
+		List<FileInfoDto> list = boardMapper.fileInfoList(articleNo);
+		boardMapper.deleteFile(articleNo); // 파일 지우기 먼저
 		boardMapper.deleteArticle(articleNo);
+		for (FileInfoDto fileInfoDto : list) {
+			File file = new File(path + File.separator + fileInfoDto.getSaveFolder() + File.separator + fileInfoDto.getSaveFile());
+			if (file.exists()) {
+				file.delete();
+			}
+		}
 	}
 
 }
