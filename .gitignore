@@ -5,4 +5,4 @@ Servers/
 #*/.classpath
 #*/.project
 #*/.springBeans
-#*/target/
+*/target/
