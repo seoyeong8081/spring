@@ -105,11 +105,8 @@ public class BookController {
 	 */
 	@GetMapping("/list")
 	public String showList(Model model, @ModelAttribute SearchCondition condition) {
-		
-		
-		// model에 book list 담기
-		// model에 key, word, orderBy, orderByDir, currentPage도 넘겨주기
-		// pagination 관련된 것도 넘겨주기
+		model.addAttribute("condition", condition);
+		model.mergeAttributes(bService.pagingSearch(condition));
 		return "list";
 	}
 

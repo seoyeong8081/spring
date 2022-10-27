@@ -20,12 +20,6 @@
 		<if test="key != 'none'">
 			where ${key} like concat('%', #{word}, '%')
 		</if>
-		<if test="orderBy != 'none'">
-			order by ${orderBy} ${orderByDir}
-		</if>
-		<if test="countPerPage != 0">
-			limit #{offset}, #{countPerPage}
-		</if>
 	</sql>
 
 	<!-- Book에서 검색한다. -->
@@ -34,6 +28,12 @@
 		select isbn, title, author, price
 		from book
 		<include refid="searchCondition"></include>
+		<if test="orderBy != 'none'">
+			order by ${orderBy} ${orderByDir}
+		</if>
+		<if test="countPerPage != 0">
+			limit #{offset}, #{countPerPage}
+		</if>
 	</select>
 
 	<!-- 검색 조건에 해당하는 데이터 건수를 반환한다. -->

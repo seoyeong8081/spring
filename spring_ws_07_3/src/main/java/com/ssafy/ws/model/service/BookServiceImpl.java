@@ -78,7 +78,7 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public List<Book> search(SearchCondition condition) {
-		return null;
+		return bDao.search(condition);
 	}
 
 	/**
@@ -90,7 +90,21 @@ public class BookServiceImpl implements BookService {
 	 */
 	@Override
 	public Map<String, Object> pagingSearch(SearchCondition condition) {
-		return null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int totalCount = bDao.getTotalSearchCount(condition);
+		PageNavigation pageNavigation = new PageNavigation(condition.getCurrentPage(), totalCount);
+
+		map.put("startPage", pageNavigation.getStartPage());
+		map.put("endPage", pageNavigation.getEndPage());
+//		map.put("currentPage", pageNavigation.getCurrentPage());
+		map.put("startRange", pageNavigation.isStartRange());
+		map.put("endRange", pageNavigation.isEndRange());
+		map.put("totalPageCount", pageNavigation.getTotalPageCount());
+		
+		map.put("books", search(condition));
+		
+		return map;
 	}
 
 }
