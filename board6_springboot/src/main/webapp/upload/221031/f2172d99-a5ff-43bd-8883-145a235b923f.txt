@@ -1,0 +1,4 @@
+-- 리스트
+select sigungu_code, name
+from sigungu
+where area_code = ?
