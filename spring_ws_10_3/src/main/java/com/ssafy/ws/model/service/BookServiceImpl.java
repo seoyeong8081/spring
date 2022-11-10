@@ -1,0 +1,134 @@
+package com.ssafy.ws.model.service;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.ssafy.ws.model.dao.BookDao;
+import com.ssafy.ws.model.dto.Book;
+import com.ssafy.ws.model.dto.SearchCondition;
+import com.ssafy.ws.util.PageNavigation;
+
+/**
+ * 빈으로 등록될 수 있도록 @Service를 선언한다.
+ *
+ */
+@Service
+public class BookServiceImpl implements BookService {
+
+	private static final Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
+	/**
+	 * has a 관계로 사용할 BookDao 타입의 dao를 선언한다.
+	 */
+	private BookDao bDao;
+	/**
+	 * 파일 업로드 경로를 설정하기 위해 ResourceLoader를 주입받는다.
+	 */
+	@Autowired
+	ResourceLoader resLoader;
+
+	/**
+	 * setter를 통해 BookDao를 주입받는다.
+	 * 
+	 * @Autowired를 통해 BookDao 타입의 빈을 주입 받는다.
+	 * @param bDao
+	 */
+	@Autowired
+	public void setBookDao(BookDao bDao) {
+		this.bDao = bDao;
+	}
+
+	public BookDao getBookDao() {
+		return bDao;
+	}
+
+	@Override
+	@Transactional
+	public int insert(Book book) throws IllegalStateException, IOException {
+		MultipartFile file = book.getFile();
+		logger.info((file != null) ? "exist" : "null");
+		if (file != null && file.getSize() > 0) {
+			String imgFileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+			String orgImgFileName = file.getOriginalFilename();
+			book.setImg(imgFileName);
+			book.setOrgImg(orgImgFileName);
+			fileRegist(file, imgFileName);
+		}
+
+		return bDao.insert(book);
+	}
+
+	private void fileRegist(MultipartFile file, String imgFileName) throws IOException {
+		Resource res = resLoader.getResource("classpath:/static/resources/upload"); //resources/upload
+		logger.info(res.getFile().getCanonicalPath() + File.separator + imgFileName);
+		file.transferTo(new File(res.getFile().getCanonicalPath() + File.separator + imgFileName));
+	}
+
+
+	@Override
+	public Book select(String isbn) {
+		return bDao.select(isbn);
+	}
+
+	@Override
+	public List<Book> search(SearchCondition condition) {
+		return bDao.search(condition);
+	}
+
+	/**
+	 * 리스트에 페이징을 적용하기 위한 메서드
+	 * Map에 books를 키로 화면에 표시할 Book 목록을 저장하고
+	 * 
+	 * @param condition
+	 * @return
+	 */
+	@Override
+	public Map<String, Object> pagingSearch(SearchCondition condition) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int totalCount = bDao.getTotalSearchCount(condition);
+		PageNavigation pageNavigation = new PageNavigation(condition.getCurrentPage(), totalCount);
+
+		map.put("startPage", pageNavigation.getStartPage());
+		map.put("endPage", pageNavigation.getEndPage());
+//		map.put("currentPage", pageNavigation.getCurrentPage());
+		map.put("startRange", pageNavigation.isStartRange());
+		map.put("endRange", pageNavigation.isEndRange());
+		map.put("totalPageCount", pageNavigation.getTotalPageCount());
+		
+		map.put("books", search(condition));
+		
+		return map;
+	}
+
+	@Override
+	public int update(Book book) throws IllegalStateException, IOException {
+		MultipartFile file = book.getFile();
+		if (file != null && file.getSize() > 0) {
+			String imgFileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+			String orgImgFileName = file.getOriginalFilename();
+			book.setImg(imgFileName);
+			book.setOrgImg(orgImgFileName);
+			fileRegist(file, imgFileName);
+		}
+
+		return bDao.update(book);
+	}
+
+	@Override
+	public int delete(String isbn) {
+		return bDao.delete(isbn);
+	}
+
+}

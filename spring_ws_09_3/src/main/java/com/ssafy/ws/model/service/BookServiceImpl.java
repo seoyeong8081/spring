@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ import com.ssafy.ws.util.PageNavigation;
 @Service
 public class BookServiceImpl implements BookService {
 
-//	private static final Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
 	/**
 	 * has a 관계로 사용할 BookDao 타입의 dao를 선언한다.
 	 */
@@ -58,12 +60,13 @@ public class BookServiceImpl implements BookService {
 	public int insert(Book book) throws IllegalStateException, IOException {
 		MultipartFile file = book.getFile();
 		if (file != null && file.getSize() > 0) {
-			Resource res = resLoader.getResource("resources/upload");
-			if (!res.exists()) {
-				res.getFile().mkdirs();
-			}
+			Resource res = resLoader.getResource("classpath:/static/resources/upload"); //resources/upload
+//			if (!res.exists()) {
+//				res.getFile().mkdirs();
+//			}
 			book.setImg(System.currentTimeMillis() + "_" + file.getOriginalFilename());
 			book.setOrgImg(file.getOriginalFilename());
+			logger.info(res.getFile().getCanonicalPath() + File.separator + book.getImg());
 			file.transferTo(new File(res.getFile().getCanonicalPath() + File.separator + book.getImg()));
 		}
 
